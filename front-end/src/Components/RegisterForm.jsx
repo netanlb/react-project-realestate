@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { CSSTransition } from 'react-transition-group';
 
 const RegisterFrom = ({ closeModal, setAlert }) => {
   const [email, setEmail] = useState('');
@@ -38,12 +39,20 @@ const RegisterFrom = ({ closeModal, setAlert }) => {
         <span aria-hidden="true">&times;</span>
       </button>
       <Form style={{ padding: 30 }}>
-        {massage
-          && (
-            <div className="alert alert-danger alert-dismissible fade show" role="alert">
-              {massage}
-            </div>
-          )}
+        <CSSTransition
+          in={massage}
+          timeout={300}
+          classNames="col"
+        >
+          <div>
+            {massage
+            && (
+              <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                {massage}
+              </div>
+            )}
+          </div>
+        </CSSTransition>
         <h2>Fill the form bellow to register new user</h2>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>

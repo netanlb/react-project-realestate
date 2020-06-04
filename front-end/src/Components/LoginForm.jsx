@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import { CSSTransition } from 'react-transition-group';
 
 const LoginForm = ({ closeModal, loginUser, setAlert }) => {
 
@@ -42,12 +43,20 @@ const LoginForm = ({ closeModal, loginUser, setAlert }) => {
       </button>
       <Form style={{ padding: 30 }}>
         <h2>Please Login</h2>
-        {massage
-        && (
-          <div className="alert alert-danger alert-dismissible fade show" role="alert">
-            {massage}
+        <CSSTransition
+          in={massage}
+          timeout={300}
+          classNames="col"
+        >
+          <div>
+            {massage
+            && (
+              <div className="alert alert-danger alert-dismissible fade show" role="alert">
+                {massage}
+              </div>
+            )}
           </div>
-        )}
+        </CSSTransition>
         <Form.Group controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} />

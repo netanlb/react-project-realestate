@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const config = require('config');
 const jwt = require('jsonwebtoken');
+const Joi = require('@hapi/joi');
 
 
 
@@ -13,6 +14,25 @@ router.post('/', (req, res) => {
 
   if(!name || !email || !password) {
     return res.status(400).json({ msg: 'Please enter all fields' })
+  }
+
+  const validatePassword = Joi.object({
+    password: Joi.string()
+      .pattern(new RegExp('^[a-zA-Z0-9]{6,15}$')),
+  })
+
+  if(validatePassword.validate({password}).error) {
+    return res.status(400).json({ msg: 'Password should be between 6-15 characters' })
+  }
+
+  const validateEmail = Joi.object({
+    email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'co.il'] } })
+        .required()
+  })
+
+  if(validateEmail.validate({email}).error) {
+    return res.status(400).json({ msg: 'Please enter a valid email' })
   }
 
   User.findOne({ email })
