@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { CSSTransition } from 'react-transition-group';
 import alertMassage from './alertMassage';
 import AddressSearch from './AddressSearch';
 import Checkbox from './Checkbox';
+import validateApt from './validateApt';
+import Joi from '@hapi/joi';
 
 const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
   const fullAddress = true;
@@ -17,12 +19,12 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
     img: [],
     description: null,
     user: user.name,
-    parking: null,
-    balcony: null,
-    pets: null,
-    elevator: null,
-    airConditioner: null,
-    flatmates: null,
+    parking: false,
+    balcony: false,
+    pets: false,
+    elevator: false,
+    airConditioner: false,
+    flatmates: false,
     longterm: null,
     handicapAccess: null,
     furnished: null,
@@ -65,8 +67,15 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
     setPropertyDetails((c) => ({ ...c, [key]: !c[key] }));
   };
 
-  const validateForm = () => {
+  Object.filter = (obj, predicate) =>
+  Object.keys(obj)
+    .filter((key) => predicate(obj[key]))
+    .reduce((res, key) => (res[key] = obj[key], res), {});
 
+  const validateForm = () => {
+    const filtered = Object.filter(propertyDetails, (param) => param);
+    const { error } = validateApt.validate(filtered);
+    !error ? uploadFile(user) : setAlert('Please enter a valid ' + error.details[0].context.key, 'danger');
   };
 
   return (
@@ -269,8 +278,7 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
             type="button"
             className="btn btn-primary"
             onClick={() => {
-              uploadFile(user);
-              closeEdit();
+              validateForm();
             }}
           >Add new apartment
           </button>

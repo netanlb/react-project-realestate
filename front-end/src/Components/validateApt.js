@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+import Joi from '@hapi/joi';
 
 const ValidateApt = Joi.object({
   address: Joi.object()
@@ -29,7 +29,7 @@ const ValidateApt = Joi.object({
     .required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'co.il'] } })
-      .required(),
-})
+    .required(),
+});
 
-module.exports = ValidateApt;
+export default ValidateApt;

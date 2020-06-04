@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Router, Redirect } from '@reach/router';
-
 import ApartmentList from './ApartmentList';
-import ApartmentWindow from './ApartmentWindow';
 
 const ApartmentContainer = ({
   triggerLiked,
   setModal,
   onLike,
-  getFetchFunction,
   user,
   massage,
   setAlert,
@@ -83,9 +79,14 @@ const ApartmentContainer = ({
     };
     fetch('http://localhost:5000/api/apartments', postApartment)
       .then((res) => res.json()
-        .then((json) => setAlert(json.msg, json.color)))
+        .then((json) => {
+          setAlert(json.msg, json.color);
+          json.color === 'success' && setModal(null);
+        }))
       .catch((err) => console.log(err))
-      .then(() => fetchApartments());
+      .then(() => {
+        fetchApartments();
+      });
   };
 
   const likedApartments = (liked) => {
@@ -98,7 +99,6 @@ const ApartmentContainer = ({
 
   useEffect(() => {
     triggerLiked(likedApartments);
-    getFetchFunction(fetchApartments);
   }, []);
 
   const removeApartment = (id) => {
@@ -118,10 +118,6 @@ const ApartmentContainer = ({
   useEffect(() => {
     fetchApartments();
   }, []);
-
-  const getDataFromViewApartment = () => {
-    
-  }
 
   return (
     <ApartmentList

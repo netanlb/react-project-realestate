@@ -47,7 +47,7 @@ class ApartmentList extends React.Component {
 
   render() {
     const { curDisplay } = this.state;
-    const { apartments, numToDisplay, setModal, removeApartment, user, onLike, massage, setAlert, fetchApartments, addApartment, modalComponent, liked } = this.props;
+    const { apartments, numToDisplay, setModal, removeApartment, user, onLike, massage, setAlert, fetchApartments, addApartment, liked } = this.props;
 
     return (
       <div className="container" style={{ marginTop: '4em' }}>

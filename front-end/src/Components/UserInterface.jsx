@@ -1,9 +1,8 @@
 import React from 'react';
-import { Router } from '@reach/router';
 import AddProperty from './AddProperty';
 
 
-const UserInterface = ({ user, setModal, addApartment, setAlert, massage={massage} }) => {
+const UserInterface = ({ user, setModal, addApartment, setAlert, massage }) => {
   return (
     <div className="d-flex flex-row p-2 mb-3 justify-content-center">
       <div>

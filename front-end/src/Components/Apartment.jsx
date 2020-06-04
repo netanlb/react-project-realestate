@@ -42,7 +42,7 @@ export default function Apartment({ data, setModal, removeApartment, user, onLik
                 Rooms &nbsp;{data.rooms}
               </div>
               <div className="col">
-                Price &nbsp;{data.price}
+                Price &nbsp;{data.price || 'Not specified'}
               </div>
             </div>
           </p>

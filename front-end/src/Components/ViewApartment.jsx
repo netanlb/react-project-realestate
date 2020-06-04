@@ -72,7 +72,7 @@ export default function ViewApartment({ data, closeApartmentView }) {
           </div>
           <div className="border rounded p-4 mt-2" style={{ backgroundColor: '#ffff' }}>
             <p className="h6">Sharing</p>
-            <a href={`apartment/${data._id}`}>Open shareable link</a>
+            <a href={`apartment/${data._id}`}>Open apartment page</a>
             <button
               type="button"
               className="btn btn-secondary btn-sm float-right"
