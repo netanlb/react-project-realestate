@@ -21,7 +21,7 @@ router.post('/', (req, res) => {
 
     })
   } else {
-    fileList.mv(`${__dirname}/../../../front-end/public/uploads/${fileList.name}`, err => {
+    fileList.mv(`${__dirname}/../../../back-end/uploads/${fileList.name}`, err => {
       if(err) {
         console.log(err);
         return res.status(500).send(err);
