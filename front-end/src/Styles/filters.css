@@ -1,0 +1,21 @@
+@media only screen and (max-width: 1200px) {
+  .column {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 1em;
+  }
+  .price {
+    width: 60%;
+  }
+  .price-end {
+    width: 38%;
+  }
+  .rooms {
+    margin-left: 1em;
+    margin-right: 1em;
+  }
+  .additional {
+    width: 100%;
+    margin-bottom: 1em;
+  }
+}
