@@ -32,7 +32,7 @@ app.use('/api/apartment', require('./routes/api/apartment'));
 app.use('/images/', express.static(`${__dirname}/uploads`));
 
 if(process.env.NODE_ENV === 'production') {
-  app.use(experss.static('client/build'));
+  app.use(experss.static(`${__dirname}/client/build`));
 
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
