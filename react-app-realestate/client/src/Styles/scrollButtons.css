@@ -1,0 +1,10 @@
+@media only screen and (max-width: 770px) {
+  .scroll-right {
+    position: relative;
+    opacity: 0.4;
+  }
+  .scroll-left {
+    position: relative;
+    opacity: 0.4;
+  }
+}
