@@ -59,10 +59,10 @@ const Filter = ({ fetchApartments }) => {
           <div>
             <div className="input-group">
               <div className="input-group-prepend">
-                <label class="input-group-text" for="inputGroupSelect01">Rooms</label>
+                <label className="input-group-text" htmlFor="inputGroupSelect01">Rooms</label>
               </div>
               <select className="custom-select" id="inputGroupSelect01" value={rooms} onChange={(e) => setRooms(e.target.value)}>
-                <option selected></option>
+                <option value=" "> </option>
                 <option value="1">1</option>
                 <option value="1.5">1.5</option>
                 <option value="2">2</option>

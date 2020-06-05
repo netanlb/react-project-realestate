@@ -10,24 +10,24 @@ router.post('/', (req, res) => {
   if (fileList.length > 1) {
     Array.from(fileList).forEach(file => {
       console.log(file);
-      file.mv(`${__dirname}/../../../front-end/public/uploads/${file.name}`, err => {
+      file.mv(`${__dirname}/../../uploads/${file.name}`, err => {
         if(err) {
           console.log(err);
           return res.status(500).send(err);
         }
       });
-      const filePaths = Array.from(fileList).map(file => `/uploads/${file.name}`);
+      const filePaths = Array.from(fileList).map(file => `/images/${file.name}`);
       res.json({ filePaths });
 
     })
   } else {
-    fileList.mv(`${__dirname}/../../../back-end/uploads/${fileList.name}`, err => {
+    fileList.mv(`${__dirname}/../../uploads/${fileList.name}`, err => {
       if(err) {
         console.log(err);
         return res.status(500).send(err);
       }
     });
-    const filePaths = [`/uploads/${fileList.name}`];
+    const filePaths = [`/images/${fileList.name}`];
     res.json({ filePaths });
   }
   

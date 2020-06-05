@@ -6,16 +6,20 @@ import '../Styles/switchTransition.css';
 
 import Apartment from './Apartment';
 import ScrollBtns from './ScrollBtns';
-import alertMassage from './alertMassage';
-import Filter from './Filter';
-import UserInterface from './UserInterface';
 
 class ApartmentList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       curDisplay: 0,
+      numToDisplay: 6,
     };
+  }
+
+  componentDidMount() {
+    if (document.body.scrollWidth < 770) {
+      this.setState({ numToDisplay: 1 });
+    }
   }
 
   componentDidUpdate = (prevProps) => {
@@ -26,8 +30,8 @@ class ApartmentList extends React.Component {
   }
 
   onScrollLeft = () => {
-    const { apartments, numToDisplay } = this.props;
-    const { curDisplay } = this.state;
+    const { numToDisplay, curDisplay } = this.state;
+    const { apartments } = this.props;
     if (apartments.length > curDisplay + numToDisplay) {
       this.setState({
         curDisplay: curDisplay + numToDisplay,
@@ -36,8 +40,7 @@ class ApartmentList extends React.Component {
   }
 
   onScrollRight = () => {
-    const { curDisplay } = this.state;
-    const { numToDisplay } = this.props;
+    const { curDisplay, numToDisplay } = this.state;
     if (curDisplay > 0) {
       this.setState({
         curDisplay: curDisplay - numToDisplay,
@@ -46,26 +49,14 @@ class ApartmentList extends React.Component {
   }
 
   render() {
-    const { curDisplay } = this.state;
-    const { apartments, numToDisplay, setModal, removeApartment, user, onLike, massage, setAlert, fetchApartments, addApartment, liked } = this.props;
+    const { curDisplay, numToDisplay } = this.state;
+    const { apartments, setModal, removeApartment, user, onLike, setAlert, liked } = this.props;
 
     return (
-      <div className="container" style={{ marginTop: '4em' }}>
-        <UserInterface user={user} setModal={setModal} addApartment={addApartment} setAlert={setAlert} massage={massage} />
-        <CSSTransition
-          in={massage}
-          timeout={300}
-          classNames="col"
-        ><div>
-          {massage
-            && (
-              alertMassage(massage.color, massage.msg, setAlert)
-            )}
-        </div>
-        </CSSTransition>
-        <div className="collapse" id="filter">
-          <div>
-            <Filter fetchApartments={fetchApartments} />
+      <div>
+        <div className="row">
+          <div className="col ml-2">
+            <p style={{ color: '#A9A9A9' }}>{apartments.length} results.</p>
           </div>
         </div>
         <SwitchTransition>
@@ -74,25 +65,27 @@ class ApartmentList extends React.Component {
             addEndListener={(node, done) => node.addEventListener('transitionend', done, false)}
             classNames="pop"
           >
-            <div className="aptlist">
-              <div className="row">
-                {apartments.slice(curDisplay, curDisplay + numToDisplay)
-                  .map((apt) => (
-                    <Apartment
-                      setAlert={setAlert}
-                      onLike={onLike}
-                      user={user}
-                      removeApartment={removeApartment}
-                      data={apt}
-                      setModal={setModal}
-                      liked={liked}
-                    />
-                  ))}
+            <div>
+              <div className="aptlist">
+                <div className="row">
+                  {apartments.slice(curDisplay, curDisplay + numToDisplay)
+                    .map((apt) => (
+                      <Apartment
+                        setAlert={setAlert}
+                        onLike={onLike}
+                        user={user}
+                        removeApartment={removeApartment}
+                        data={apt}
+                        setModal={setModal}
+                        liked={liked}
+                      />
+                    ))}
+                </div>
               </div>
             </div>
           </CSSTransition>
         </SwitchTransition>
-        <ScrollBtns onScrollLeft={this.onScrollLeft} onScrollRight={this.onScrollRight} />
+        <ScrollBtns onScrollLeft={this.onScrollLeft} onScrollRight={this.onScrollRight} length={apartments.length} curDisplay={curDisplay} numToDisplay={numToDisplay} />
       </div>
     );
   }

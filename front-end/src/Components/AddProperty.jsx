@@ -5,19 +5,18 @@ import alertMassage from './alertMassage';
 import AddressSearch from './AddressSearch';
 import Checkbox from './Checkbox';
 import validateApt from './validateApt';
-import Joi from '@hapi/joi';
 
 const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
   const fullAddress = true;
   const [propertyDetails, setPropertyDetails] = useState({
-    address: null,
-    city: null,
-    rooms: null,
-    squareMeters: null,
-    price: null,
-    entranceDate: null,
+    address: '',
+    city: '',
+    rooms: '',
+    squareMeters: '',
+    price: '',
+    entranceDate: '',
     img: [],
-    description: null,
+    description: '',
     user: user.name,
     parking: false,
     balcony: false,
@@ -25,14 +24,14 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
     elevator: false,
     airConditioner: false,
     flatmates: false,
-    longterm: null,
-    handicapAccess: null,
-    furnished: null,
-    storage: null,
-    bombShelter: null,
-    frontYard: null,
-    phone: null,
-    email: null,
+    longterm: false,
+    handicapAccess: false,
+    furnished: false,
+    storage: false,
+    bombShelter: false,
+    frontYard: false,
+    phone: '',
+    email: '',
   });
 
   const [files, setFile] = useState(null);
@@ -41,14 +40,13 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
   const getAddress = (callback) => {
     setPropertyDetails((c) => ({ ...c, address: callback }));
     setPropertyDetails((c) => ({ ...c, city: callback.vicinity }));
-
   };
 
   const uploadFile = () => {
     if (files) {
       const formData = new FormData();
       Array.from(files).forEach((file) => formData.append('files', file));
-      fetch('http://localhost:5000/api/upload', {
+      fetch('/api/upload', {
         method: 'POST',
         body: formData,
       }).then((res) => res.json())
@@ -75,7 +73,7 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
   const validateForm = () => {
     const filtered = Object.filter(propertyDetails, (param) => param);
     const { error } = validateApt.validate(filtered);
-    !error ? uploadFile(user) : setAlert('Please enter a valid ' + error.details[0].context.key, 'danger');
+    !error ? uploadFile(user) : setAlert(error.details[0].context.key + 'is not valid', 'danger');
   };
 
   return (
@@ -91,7 +89,7 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
       <button type="button" className="close" aria-label="Close" onClick={() => closeEdit()} style={{ position: 'relative', right: 5 }}>
         <span aria-hidden="true">&times;</span>
       </button>
-      <Form className="overflow-auto apt-info-input" novalidate style={{ margin: 20, padding: 20, height: '100%' }}>
+      <Form className="overflow-auto apt-info-input" noValidate style={{ margin: 20, padding: 20, height: '100%' }}>
         <CSSTransition
           in={massage}
           timeout={300}
@@ -113,7 +111,10 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
           <Form.Label>*Address</Form.Label>
           <div className="row">
             <div className="col">
-              <AddressSearch fullAddress={fullAddress} getAddress={getAddress} className="address" required /><br />
+              <AddressSearch current={propertyDetails.address} fullAddress={fullAddress} getAddress={getAddress} className="address" required />
+              <Form.Text className="text-muted">
+                Address should be selected from dropdown list to be valid.
+              </Form.Text><br />
             </div>
           </div>
           <div className="row">
@@ -211,7 +212,7 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
           <div className="row">
             <Checkbox toggle={() => toggleCheckbox('elevator')} checked={propertyDetails.elevator} name="Elevator" />
             <Checkbox toggle={() => toggleCheckbox('handicapAccess')} checked={propertyDetails.handicapAccess} name="Handicap Accessability" />
-            <Checkbox toggle={() => toggleCheckbox('fontYard')} checked={propertyDetails.frontYard} name="Front Yard" />
+            <Checkbox toggle={() => toggleCheckbox('frontYard')} checked={propertyDetails.frontYard} name="Front Yard" />
           </div>
           <br />
           <Form.Label>Description</Form.Label>
@@ -277,7 +278,9 @@ const AddProperty = ({ closeEdit, addApartment, user, setAlert, massage }) => {
           <button
             type="button"
             className="btn btn-primary"
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
               validateForm();
             }}
           >Add new apartment

@@ -1,6 +1,5 @@
 import React from 'react';
 import LoginForm from './LoginForm';
-import AddProperty from './AddProperty';
 import RegisterForm from './RegisterForm';
 import '../Styles/navbar.css';
 

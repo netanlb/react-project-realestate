@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const config = require('config');
 const fileUpload = require('express-fileupload');
 const busboy = require('connect-busboy');
+const path = require('path');
 
 //TEMP
 const cors = require('cors');
@@ -28,6 +29,15 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/upload', require('./routes/api/upload'));
 app.use('/api/apartment', require('./routes/api/apartment'));
+app.use('/images/', express.static(`${__dirname}/uploads`));
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(experss.static(`${__dirname}/../front-end/build`));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, '..', 'front-end', 'build', 'index.html'));
+  });
+}
 
 const port = process.env.PORT || 5000;
 

@@ -96,7 +96,7 @@ class App extends Component {
     } = this.state;
 
     return (
-      <div>
+      <div className="app">
         <NavBar
           likedApartments={likedApartments}
           setModal={this.setModal}

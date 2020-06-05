@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { CSSTransition } from 'react-transition-group';
 import ApartmentList from './ApartmentList';
+import UserInterface from './UserInterface';
+import Filter from './Filter';
+import alertMassage from './alertMassage';
+import Spinner from './Spinner';
 
 const ApartmentContainer = ({
   triggerLiked,
@@ -12,7 +17,7 @@ const ApartmentContainer = ({
   modalComponent,
   liked
 }) => {
-  const [apartmentList, setApartmentList] = useState([]);
+  const [apartmentList, setApartmentList] = useState(null);
 
   const fetchApartments = (
     city,
@@ -31,7 +36,7 @@ const ApartmentContainer = ({
     storage,
     bombShelter,
   ) => {
-    const url = new URL('http://localhost:5000/api/apartments');
+    const url = new URL('http://localhost:3000/api/apartments');
     const params = {
       city,
       rooms,
@@ -60,7 +65,7 @@ const ApartmentContainer = ({
       url.search = new URLSearchParams(filtered);
     }
 
-    fetch(url)
+    fetch(url.pathname + '/' + url.search)
       .then((res) => res.json())
       .then((data) => {
         setApartmentList(data);
@@ -77,7 +82,7 @@ const ApartmentContainer = ({
       },
       body: JSON.stringify(filtered),
     };
-    fetch('http://localhost:5000/api/apartments', postApartment)
+    fetch('/api/apartments', postApartment)
       .then((res) => res.json()
         .then((json) => {
           setAlert(json.msg, json.color);
@@ -90,7 +95,7 @@ const ApartmentContainer = ({
   };
 
   const likedApartments = (liked) => {
-    fetch('http://localhost:5000/api/liked/', {
+    fetch('/api/liked/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(liked),
@@ -109,7 +114,7 @@ const ApartmentContainer = ({
         'x-auth-token': user.token,
       },
     };
-    fetch(`http://localhost:5000/api/apartments/${id}`, removedApartment)
+    fetch(`/api/apartments/${id}`, removedApartment)
       .then((res) => res.json()).then((json) => setAlert(json.msg, json.color))
       .then(() => fetchApartments())
       .catch((err) => console.log(err));
@@ -120,27 +125,47 @@ const ApartmentContainer = ({
   }, []);
 
   return (
-    <ApartmentList
-      onLike={onLike}
-      user={user}
-      addApartment={addApartment}
-      removeApartment={removeApartment}
-      apartments={apartmentList}
-      numToDisplay={6}
-      setModal={setModal}
-      massage={massage}
-      setAlert={setAlert}
-      fetchApartments={fetchApartments}
-      path="featured"
-      modalComponent={modalComponent}
-      liked={liked}
-    />
+    <div className="container apartment-list" style={{ marginTop: '4em' }}>
+      <UserInterface user={user} setModal={setModal} addApartment={addApartment} setAlert={setAlert} massage={massage} />
+      <CSSTransition
+        in={massage}
+        timeout={300}
+        classNames="col"
+      >
+        <div>
+          {massage
+            && (
+              alertMassage(massage.color, massage.msg, setAlert)
+            )}
+        </div>
+      </CSSTransition>
+      <div className="collapse" id="filter">
+        <Filter fetchApartments={fetchApartments} />
+      </div>
+      {apartmentList && apartmentList.length === 0 && <div className="text-center">Sorry, no results here...</div>}
+      {apartmentList && apartmentList.length > 0 && (
+        <ApartmentList
+          onLike={onLike}
+          user={user}
+          addApartment={addApartment}
+          removeApartment={removeApartment}
+          apartments={apartmentList}
+          setModal={setModal}
+          massage={massage}
+          setAlert={setAlert}
+          fetchApartments={fetchApartments}
+          path="featured"
+          modalComponent={modalComponent}
+          liked={liked}
+        />
+      )}
+      {!apartmentList && <Spinner />}
+    </div>
   );
 };
 
 ApartmentContainer.propTypes = {
   setModal: PropTypes.func,
-  triggerFunction: PropTypes.func,
 };
 
 ApartmentContainer.defaultProps = {

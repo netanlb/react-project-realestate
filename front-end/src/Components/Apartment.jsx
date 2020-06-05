@@ -5,7 +5,7 @@ import '../Styles/apartment.css';
 import ConfirmAction from './ConfirmAction';
 import ViewApartment from './ViewApartment';
 
-export default function Apartment({ data, setModal, removeApartment, user, onLike, liked, setAlert }) {
+export default function Apartment({ data, setModal, removeApartment, user, onLike, liked }) {
   const [isLiked, setIsLiked] = useState(false);
 
   const checkLiked = () => {
@@ -24,11 +24,11 @@ export default function Apartment({ data, setModal, removeApartment, user, onLik
 
   return (
     <div className="col-lg-4 col-md-6 text-dark mb-3 apt" key={data._id} style={{ maxWidth: '25em' }}>
-      <ConfirmAction action='remove' func={removeApartment} data={data} />
+      <ConfirmAction action="remove" func={removeApartment} data={data} />
       <div className="card">
         <img src={data.img && data.img[0]} className="card-img-top alt='img" alt="" style={{ height: 200 }} />
         <div className="card-body">
-          <p className="card-text" style={{ color: '#117b8b' }}>
+          <div className="card-text mb-3" style={{ color: '#117b8b' }}>
             <div className="row">
               <div className="col mb-3">
                 <div className="h6">{data.city}</div>
@@ -45,7 +45,7 @@ export default function Apartment({ data, setModal, removeApartment, user, onLik
                 Price &nbsp;{data.price || 'Not specified'}
               </div>
             </div>
-          </p>
+          </div>
           <button type="button" className="btn btn-outline-info float-left" onClick={() => setModal(<ViewApartment data={data} closeApartmentView={() => setModal(null)} />)}>View More</button>
           <button type="button" className="btn btn-light float-right like" style={!isLiked ? { opacity: 0.3 } : { color: '#ff7280' }} onClick={() => onLike(data._id)}>&hearts;</button>
           {user && (<button type="button" className={`btn btn-outline-danger mr-3 float-right ${data.user !== user.name && 'd-none'}`} data-toggle="modal" data-target="#confirmModal">&times;</button>)}
@@ -60,7 +60,7 @@ export default function Apartment({ data, setModal, removeApartment, user, onLik
 
 Apartment.propTypes = {
   data: PropTypes.shape({
-    img: PropTypes.object,
+    img: PropTypes.array,
     adress: PropTypes.string,
     rooms: PropTypes.number,
     price: PropTypes.number,
